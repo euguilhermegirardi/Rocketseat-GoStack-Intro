@@ -1,8 +1,10 @@
 const express = require('express');
+const cors = require('cors');
 const { uuid, isUuid } = require('uuidv4');
 
 const app = express();
 
+app.use(cors());
 // Always before routes.
 // Without this the "request.body" wouldn't work (undefined).
 app.use(express.json());
