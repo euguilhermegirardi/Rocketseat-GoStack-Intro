@@ -5,6 +5,7 @@ import {
   Text,
   StyleSheet,
   StatusBar,
+  TouchableOpacity,
 } from 'react-native';
 
 import api from './services/api';
@@ -14,10 +15,18 @@ export default function App() {
 
   useEffect(() => {
     api.get('projects').then((res) => {
-      console.log(res.data);
       setProjects(res.data);
     });
   }, []);
+
+  async function handleAddProject() {
+    const response = await api.post('projects', {
+      title: `New project ${Date.now()}`,
+      owner: 'Girardi',
+    });
+
+    setProjects([...projects, response.data]);
+  }
 
   return (
     <>
@@ -30,6 +39,12 @@ export default function App() {
             <Text style={styles.project}>{project.title}</Text>
           )}
         />
+        <TouchableOpacity
+          activeOpacity={0.6}
+          style={styles.button}
+          onPress={handleAddProject}>
+          <Text style={styles.buttonTxt}>Add a project</Text>
+        </TouchableOpacity>
       </SafeAreaView>
     </>
   );
@@ -43,5 +58,17 @@ const styles = StyleSheet.create({
   project: {
     color: '#FFF',
     fontSize: 20,
+  },
+  button: {
+    backgroundColor: '#fff',
+    margin: 20,
+    height: 50,
+    borderRadius: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonTxt: {
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
